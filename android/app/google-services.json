@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "37041084525",
+    "project_id": "bhav-database",
+    "storage_bucket": "bhav-database.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37041084525:android:11d70ef35bfb3795670764",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5sEPPdhlNM8xevtgHDtjgezbD9WGlRcc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

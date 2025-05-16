@@ -1,0 +1,60 @@
+allprojects {
+    ext.kotlin_version = '2.1.10' // Ensure correct Kotlin version
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    // Ensure Java 17 Compatibility Without Conflicts
+    subprojects {
+        if (project.hasProperty('android')) {
+            project.android {
+                // Ensure namespace is properly set
+                if (!project.android.hasProperty('namespace')) {
+                    project.android.namespace = project.group.toString()
+                }
+
+                compileOptions {
+                    sourceCompatibility JavaVersion.VERSION_17
+                    targetCompatibility JavaVersion.VERSION_17
+                }
+
+                tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+                    kotlinOptions {
+                        jvmTarget = "17"
+                    }
+                }
+            }
+        }
+    }
+
+    // Ensure Correct BCProv Version (Downgrade if needed)
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == "org.bouncycastle" && details.requested.name == "bcprov-jdk18on") {
+                details.useVersion "1.76" // Downgrade for compatibility
+            }
+        }
+    }
+}
+
+// Set build directories
+rootProject.buildDir = "../build"
+
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    project.evaluationDependsOn(":app")
+}
+
+// ✅ Exclude unit tests for android_intent_plus (Move this to settings.gradle)
+tasks.withType(Test).configureEach {
+    if (project.path.contains("android_intent_plus")) {
+        enabled = false
+    }
+}
+
+// Clean task
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
