@@ -1,3 +1,6 @@
+
+// consult_specialist.dart
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:url_launcher/url_launcher.dart';
@@ -165,7 +168,6 @@ class _ConsultSpecialistPageState extends State<ConsultSpecialistPage> {
   @override
   void initState() {
     super.initState();
-    // Initially display all specialists.
     filteredSpecialists = specialists;
   }
 
@@ -182,11 +184,10 @@ class _ConsultSpecialistPageState extends State<ConsultSpecialistPage> {
   }
 
   Future<void> _sendMessageToSpecialist(Specialist specialist) async {
-    // Placeholder for messaging functionality.
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text("Messaging feature for ${specialist.name} coming soon."),
-        backgroundColor: Colors.indigo,
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
     );
   }
@@ -200,57 +201,75 @@ class _ConsultSpecialistPageState extends State<ConsultSpecialistPage> {
     );
   }
 
-  // Show a bottom sheet with consultation options
   void _showConsultOptions(Specialist specialist) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.black87,
+      backgroundColor: Colors.transparent,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (BuildContext context) {
-        return Padding(
+        return Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
           padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 specialist.name,
-                style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
               const SizedBox(height: 16),
               ListTile(
-                leading: const Icon(Icons.call, color: Colors.greenAccent),
-                title: const Text("In-App Call",
-                    style: TextStyle(color: Colors.white)),
+                leading: Icon(
+                  Icons.call,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                title: Text(
+                  "In-App Call",
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   _startInAppCall(specialist);
                 },
               ),
               ListTile(
-                leading:
-                    const Icon(Icons.calendar_today, color: Colors.orange),
-                title: const Text("Schedule Consultation",
-                    style: TextStyle(color: Colors.white)),
+                leading: Icon(
+                  Icons.calendar_today,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                title: Text(
+                  "Schedule Consultation",
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
                           "Scheduling consultation with ${specialist.name}..."),
-                      backgroundColor: Colors.indigo,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                     ),
                   );
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.message, color: Colors.blueAccent),
-                title: const Text("Send a Message",
-                    style: TextStyle(color: Colors.white)),
+                leading: Icon(
+                  Icons.message,
+                  color: Theme.of(context).colorScheme.tertiary,
+                ),
+                title: Text(
+                  "Send a Message",
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   _sendMessageToSpecialist(specialist);
@@ -259,8 +278,12 @@ class _ConsultSpecialistPageState extends State<ConsultSpecialistPage> {
               const SizedBox(height: 10),
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text("Cancel",
-                    style: TextStyle(color: Colors.white70)),
+                child: Text(
+                  "Cancel",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  ),
+                ),
               ),
             ],
           ),
@@ -278,35 +301,46 @@ class _ConsultSpecialistPageState extends State<ConsultSpecialistPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212), // Dark background
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1E88E5), // Blue
-        title: const Text(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: Text(
           "Consult a Specialist",
-          style:
-              TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onPrimary,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
+        iconTheme: IconThemeData(
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
       ),
       body: Column(
         children: [
           // Search Bar
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: searchController,
-              onChanged: filterSpecialists,
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                hintText: "Search specialists...",
-                hintStyle: const TextStyle(color: Colors.white70),
-                prefixIcon:
-                    const Icon(Icons.search, color: Colors.white70),
-                filled: true,
-                fillColor: Colors.white.withOpacity(0.1),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
+            child: Card(
+              elevation: 2,
+              child: TextField(
+                controller: searchController,
+                onChanged: filterSpecialists,
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                decoration: InputDecoration(
+                  hintText: "Search specialists...",
+                  hintStyle: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  ),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
                 ),
               ),
             ),
@@ -319,9 +353,8 @@ class _ConsultSpecialistPageState extends State<ConsultSpecialistPage> {
               itemBuilder: (context, index) {
                 final specialist = filteredSpecialists[index];
                 return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: const EdgeInsets.only(bottom: 12.0),
                   child: Card(
-                    color: const Color(0xFF512DA8), // Dark Purple
                     elevation: 4,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
@@ -331,25 +364,31 @@ class _ConsultSpecialistPageState extends State<ConsultSpecialistPage> {
                       leading: CircleAvatar(
                         backgroundImage: AssetImage(specialist.image),
                         radius: 30,
+                        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
                       ),
                       title: Text(
                         specialist.name,
-                        style: const TextStyle(
-                          fontSize: 18,
+                        style: TextStyle(
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.onSurface,
                         ),
                       ),
                       subtitle: Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
                           specialist.qualification,
-                          style: const TextStyle(color: Colors.white70),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                       trailing: IconButton(
-                        icon: const Icon(Icons.more_vert,
-                            color: Colors.white70),
+                        icon: Icon(
+                          Icons.more_vert,
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                        ),
                         onPressed: () => _showConsultOptions(specialist),
                       ),
                       onTap: () => _showConsultOptions(specialist),
@@ -366,7 +405,7 @@ class _ConsultSpecialistPageState extends State<ConsultSpecialistPage> {
 }
 
 // ---------------------------
-// In-App Call Page (World Class UI)
+// In-App Call Page
 // ---------------------------
 class InAppCallPage extends StatefulWidget {
   final Specialist specialist;
@@ -386,7 +425,6 @@ class _InAppCallPageState extends State<InAppCallPage> {
   @override
   void initState() {
     super.initState();
-    // Start the call timer
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _secondsElapsed++;
@@ -409,21 +447,15 @@ class _InAppCallPageState extends State<InAppCallPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Dark gradient background with an overlay image for cinematic style
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.black, Colors.grey.shade900],
+            colors: [
+              Theme.of(context).colorScheme.background,
+              Theme.of(context).colorScheme.surface,
+            ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-          ),
-          image: const DecorationImage(
-            image: AssetImage("assets/call_bg.jpg"),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.black54,
-              BlendMode.darken,
-            ),
           ),
         ),
         child: SafeArea(
@@ -438,28 +470,29 @@ class _InAppCallPageState extends State<InAppCallPage> {
                   children: [
                     Text(
                       widget.specialist.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onBackground,
                       ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),
                     Text(
                       widget.specialist.qualification,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
-                        color: Colors.white70,
+                        color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
                       ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
                     Text(
                       callTimerText,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 32,
-                        color: Colors.white70,
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
@@ -467,9 +500,19 @@ class _InAppCallPageState extends State<InAppCallPage> {
               ),
               // Center specialist profile image
               Center(
-                child: CircleAvatar(
-                  backgroundImage: AssetImage(widget.specialist.image),
-                  radius: 70,
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 4,
+                    ),
+                  ),
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage(widget.specialist.image),
+                    radius: 80,
+                    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                  ),
                 ),
               ),
               // Bottom control panel
@@ -486,6 +529,7 @@ class _InAppCallPageState extends State<InAppCallPage> {
                         _buildControlButton(
                           icon: _isMuted ? Icons.mic_off : Icons.mic,
                           label: "Mute",
+                          isActive: _isMuted,
                           onPressed: () {
                             setState(() {
                               _isMuted = !_isMuted;
@@ -495,6 +539,7 @@ class _InAppCallPageState extends State<InAppCallPage> {
                         _buildControlButton(
                           icon: _isSpeakerOn ? Icons.volume_up : Icons.volume_off,
                           label: "Speaker",
+                          isActive: _isSpeakerOn,
                           onPressed: () {
                             setState(() {
                               _isSpeakerOn = !_isSpeakerOn;
@@ -504,6 +549,7 @@ class _InAppCallPageState extends State<InAppCallPage> {
                         _buildControlButton(
                           icon: _isVideoOff ? Icons.videocam_off : Icons.videocam,
                           label: "Video",
+                          isActive: !_isVideoOff,
                           onPressed: () {
                             setState(() {
                               _isVideoOff = !_isVideoOff;
@@ -514,17 +560,17 @@ class _InAppCallPageState extends State<InAppCallPage> {
                     ),
                     const SizedBox(height: 30),
                     // Hang up button
-                    ElevatedButton.icon(
+                    FilledButton.icon(
                       onPressed: () {
                         Navigator.pop(context);
                       },
                       icon: const Icon(Icons.call_end, size: 28),
                       label: const Text(
                         "Hang Up",
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 18),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.redAccent,
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.error,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 50, vertical: 16),
                         shape: RoundedRectangleBorder(
@@ -545,22 +591,35 @@ class _InAppCallPageState extends State<InAppCallPage> {
   Widget _buildControlButton({
     required IconData icon,
     required String label,
+    required bool isActive,
     required VoidCallback onPressed,
   }) {
     return Column(
       children: [
-        CircleAvatar(
-          backgroundColor: Colors.grey.shade800,
-          radius: 28,
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: isActive
+                ? Theme.of(context).colorScheme.primaryContainer
+                : Theme.of(context).colorScheme.surfaceVariant,
+          ),
           child: IconButton(
-            icon: Icon(icon, color: Colors.white),
+            icon: Icon(
+              icon,
+              color: isActive
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
             onPressed: onPressed,
           ),
         ),
         const SizedBox(height: 8),
         Text(
           label,
-          style: const TextStyle(color: Colors.white70),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
+            fontSize: 12,
+          ),
         ),
       ],
     );
